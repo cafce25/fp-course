@@ -82,8 +82,10 @@ data Op =
 -- /Tip:/ @putStrLn :: String -> IO ()@ -- Prints a string and then a new line to standard output.
 convertInteractive ::
   IO ()
-convertInteractive =
-  error "todo: Course.Interactive#convertInteractive"
+convertInteractive = do
+  putStr "Enter a string to convert to upper-case: "
+  inp <- getLine
+  putStrLn $ map toUpper inp
 
 -- |
 --
@@ -110,8 +112,12 @@ convertInteractive =
 -- /Tip:/ @putStrLn :: String -> IO ()@ -- Prints a string and then a new line to standard output.
 reverseInteractive ::
   IO ()
-reverseInteractive =
-  error "todo: Course.Interactive#reverseInteractive"
+reverseInteractive = do
+  putStr "What file should i reverse? "
+  from <- getLine
+  putStr "Wher should i put the reversed input? "
+  to <- getLine
+  readFile from >>= writeFile to . reverse
 
 -- |
 --
@@ -136,8 +142,18 @@ reverseInteractive =
 -- /Tip:/ @putStrLn :: String -> IO ()@ -- Prints a string and then a new line to standard output.
 encodeInteractive ::
   IO ()
-encodeInteractive =
-  error "todo: Course.Interactive#encodeInteractive"
+encodeInteractive = do
+  putStrLn "What string should I URL encode for you today?"
+  line <- getLine
+  putStrLn $ naiveUrlEncode line
+
+
+naiveUrlEncode :: Chars -> Chars
+naiveUrlEncode Nil = Nil
+naiveUrlEncode (' ' :. r) = "%20" ++ naiveUrlEncode r
+naiveUrlEncode ('\t' :. r) = "%09" ++ naiveUrlEncode r
+naiveUrlEncode ('"' :. r) = "%22" ++ naiveUrlEncode r
+naiveUrlEncode (x :. xs) = x :. naiveUrlEncode xs
 
 interactive ::
   IO ()
